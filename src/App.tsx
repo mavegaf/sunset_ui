@@ -45,7 +45,7 @@ function App() {
     try {
       setLoading(true)
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=5&featuretype=city`,
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=10&featuretype=city`,
         {
           headers: {
             'User-Agent': 'sunset-ui/1.0 mavegaf@gmail.com',
@@ -58,6 +58,11 @@ function App() {
       console.log(data)
       console.log(date)
       console.log(date?.from)
+
+      if (data.length == 1) {
+        // If there is only one result, we don't need to show coincidences
+        fetchSunData(data[0].lat, data[0].lon);
+      }
     } catch (err) {
       console.error('Error al buscar ubicación:', err)
     } finally {
@@ -117,7 +122,7 @@ function App() {
         </CardFooter>
       </Card>
 
-      {results.length > 0 && (
+      {results.length > 1 && (
         <Card>
           <CardContent className="text-sm p-4 space-y-2">
             <p className="font-bold text-muted-foreground mb-2">More than one result found:</p>
@@ -172,7 +177,7 @@ function App() {
           </CardContent>
         </Card>
       )}
-      <ChartSunData sunData={sunData} />
+      {sunData.length > 0 && <ChartSunData sunData={sunData} />}
     </main>
   )
 }

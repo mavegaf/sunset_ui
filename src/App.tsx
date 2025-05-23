@@ -16,6 +16,7 @@ import { Search } from 'lucide-react'
 
 import type { DateRange } from 'react-day-picker'
 import { DatePickerWithRange } from '@/components/date-picker-with-range'
+import { ChartSunData } from '@/components/chart-sun-data'
 
 function App() {
   type LocationResult = {
@@ -171,6 +172,7 @@ function App() {
           </CardContent>
         </Card>
       )}
+      <ChartSunData sunData={sunData} />
     </main>
   )
 }

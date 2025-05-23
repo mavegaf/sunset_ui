@@ -45,26 +45,23 @@ function App() {
     try {
       setLoading(true)
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=10&featuretype=city`,
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=10&featureType=city`,
         {
           headers: {
-            'User-Agent': 'sunset-ui/1.0 mavegaf@gmail.com',
+            'User-Agent': 'sunset-ui/1.0 https://github.com/mavegaf/sunset_ui',
           },
         }
       )
 
       const data = await response.json()
       setResults(data)
-      console.log(data)
-      console.log(date)
-      console.log(date?.from)
 
       if (data.length == 1) {
         // If there is only one result, we don't need to show coincidences
         fetchSunData(data[0].lat, data[0].lon);
       }
     } catch (err) {
-      console.error('Error al buscar ubicación:', err)
+      console.error('Error looking for the location:', err)
     } finally {
       setLoading(false)
     }
@@ -87,9 +84,8 @@ function App() {
       const response = await fetch(`http://127.0.0.1:3000/suntimes?${query.toString()}`)
       const data = await response.json()
       setSunData(data)
-      console.log('Datos recibidos:', data)
     } catch (err) {
-      console.error('Error al buscar datos solares:', err)
+      console.error('Error calling suntimes:', err)
     }
   }
 

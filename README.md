@@ -1,54 +1,81 @@
-# React + TypeScript + Vite
+# 🌇 Sunset UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + Vite application that lets you search for a city and view the **sunrise**, **sunset**, and **golden hour** times for a selected date range.
 
-Currently, two official plugins are available:
+> Built with **Vite**, **React**, **Tailwind CSS**, **shadcn/ui**, and **Recharts**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🔍 Search for cities using [Nominatim (OpenStreetMap)](https://nominatim.org/)
+- 📅 Select a date range with a custom Date Range Picker
+- 📋 Display a list of possible city matches if multiple exist
+- 📈 Line chart showing:
+  - Sunrise time
+  - Sunset time
+  - Golden hour time
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+> ⚠️ Requires a backend running on `http://localhost:3000`.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+---
+
+## 🔗 Backend
+
+The frontend calls an API endpoint like:
+
 ```
+GET /suntimes?lat=<lat>&lng=<lng>&date_start=<YYYY-MM-DD>&date_end=<YYYY-MM-DD>
+```
+
+It expects a JSON response with:
+
+```json
+[
+  {
+    "date": "2025-01-01",
+    "sunrise": "07:28:04 AM",
+    "sunset": "04:57:51 PM",
+    "golden_hour": "04:16:06 PM"
+  }
+]
+```
+
+---
+
+## 🧱 Project Structure
+
+```
+src/
+├── components/
+│   ├── chart-sun-data.tsx        ← Chart for sunrise/sunset/golden hour
+│   ├── date-picker-with-range.tsx
+│   └── ui/                        ← shadcn/ui components
+├── App.tsx
+├── main.tsx
+└── index.css                     ← Tailwind + design tokens
+```
+
+---
+
+## 🧠 Decisions Made
+
+- Since the backend relies on [`https://api.sunrisesunset.io`](https://api.sunrisesunset.io) and always requires a latitude and longitude, I decided to use **Nominatim** to convert user-entered locations into lat/lng coordinates.
+
+- Since a location name (e.g., "Santiago") may return **multiple matches worldwide**, I added an **intermediate step** where the user selects the specific city from a list of matching results before fetching sun data.
+
+---

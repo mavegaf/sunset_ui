@@ -105,7 +105,11 @@ function App() {
                 type="location"
                 placeholder="Location"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => {
+                  setLocation(e.target.value)
+                  setResults([])
+                  setSunData([])
+                }}
               />
               <DatePickerWithRange date={date} setDate={setDate} />
             </div>

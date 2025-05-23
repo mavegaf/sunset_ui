@@ -21,8 +21,8 @@ A React + Vite application that lets you search for a city and view the **sunris
 ## 🚀 Getting Started
 
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (USE --legacy-peer-deps, see: https://ui.shadcn.com/docs/react-19#recharts)
+npm install --legacy-peer-deps
 
 # Run the development server
 npm run dev

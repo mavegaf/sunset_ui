@@ -25,8 +25,16 @@ function App() {
     place_id: number
   }
 
+  type SunData = {
+    date: string
+    sunrise: string
+    sunset: string
+    golden_hour: string
+  }
+
   const [location, setLocation] = useState('')
   const [results, setResults] = useState<LocationResult[]>([])
+  const [sunData, setSunData] = useState<SunData[]>([])
   const [loading, setLoading] = useState(false)
   const [date, setDate] = useState<DateRange | undefined>()
 
@@ -53,6 +61,29 @@ function App() {
       console.error('Error al buscar ubicación:', err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function fetchSunData(lat: string, lng: string) {
+    if (!date?.from || !date?.to) {
+      alert('Need to select a date range')
+      return
+    }
+
+    const query = new URLSearchParams({
+      lat,
+      lng,
+      date_start: date.from.toISOString().split('T')[0],
+      date_end: date.to.toISOString().split('T')[0],
+    })
+
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/suntimes?${query.toString()}`)
+      const data = await response.json()
+      setSunData(data)
+      console.log('Datos recibidos:', data)
+    } catch (err) {
+      console.error('Error al buscar datos solares:', err)
     }
   }
 
@@ -103,14 +134,40 @@ function App() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    console.log('Seleccionado:', result.lat, result.lon)
-                  }}
+                  onClick={() => fetchSunData(result.lat, result.lon)}
                 >
                   See data
                 </Button>
               </div>
             ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {sunData.length > 0 && (
+        <Card>
+          <CardContent className="p-4 text-sm">
+            <p className="font-bold mb-2">Results</p>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b">
+                  <th className="py-1">Date</th>
+                  <th className="py-1">Sunrise</th>
+                  <th className="py-1">Sunset</th>
+                  <th className="py-1">Golden Hour</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sunData.map((item) => (
+                  <tr key={item.date} className="border-b">
+                    <td className="py-1">{item.date}</td>
+                    <td className="py-1">{item.sunrise}</td>
+                    <td className="py-1">{item.sunset}</td>
+                    <td className="py-1">{item.golden_hour}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </CardContent>
         </Card>
       )}

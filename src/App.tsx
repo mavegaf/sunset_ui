@@ -44,6 +44,8 @@ function App() {
 
     try {
       setLoading(true)
+      setResults([])
+      setSunData([])
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=10&featureType=city`,
         {
@@ -107,7 +109,7 @@ function App() {
               />
               <DatePickerWithRange date={date} setDate={setDate} />
             </div>
-            <Button type="submit" onClick={handleSearch} disabled={loading}>
+            <Button type="submit" onClick={handleSearch} disabled={loading || !date?.from || !date?.to}>
               <Search />
               {loading ? 'Searching...' : 'Search'}
             </Button>
@@ -118,7 +120,7 @@ function App() {
         </CardFooter>
       </Card>
 
-      {results.length > 1 && (
+      {results.length > 1 && sunData.length === 0 && (
         <Card>
           <CardContent className="text-sm p-4 space-y-2">
             <p className="font-bold text-muted-foreground mb-2">More than one result found:</p>
@@ -149,7 +151,7 @@ function App() {
       {sunData.length > 0 && (
         <Card>
           <CardContent className="p-4 text-sm">
-            <p className="font-bold mb-2">Results</p>
+            <p className="font-bold mb-2">Results - {location}</p>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b">
@@ -173,7 +175,7 @@ function App() {
           </CardContent>
         </Card>
       )}
-      {sunData.length > 0 && <ChartSunData sunData={sunData} />}
+      {sunData.length > 0 && <ChartSunData sunData={sunData}  location={location} />}
     </main>
   )
 }

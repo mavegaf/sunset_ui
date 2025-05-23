@@ -33,6 +33,7 @@ type Props = {
     sunset: string
     golden_hour: string
   }[]
+  location: string
 }
 
 /**
@@ -42,7 +43,7 @@ type Props = {
  * @param param0
  * @returns
  */
-export function ChartSunData({ sunData }: Props) {
+export function ChartSunData({ sunData, location }: Props) {
   const chartData = useMemo(() => {
     return sunData.map((entry) => ({
       date: entry.date.slice(5), // "MM-DD"
@@ -55,7 +56,7 @@ export function ChartSunData({ sunData }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sun Times</CardTitle>
+        <CardTitle>Sun Times - {location}</CardTitle>
         <CardDescription>Sunrise, Sunset & Golden Hour</CardDescription>
       </CardHeader>
       <CardContent className="w-full h-[300px]">

@@ -28,7 +28,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The app will be available at `http://localhost:5173`. If you need to change the port, don’t forget to update the CORS settings in https://github.com/mavegaf/sunset_api/blob/trunk/config/initializers/cors.rb#L10
 
 > ⚠️ Requires a backend running on `http://localhost:3000`.
 
